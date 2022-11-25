@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  getProduct,
   getProducts,
   createProducts,
   updateProducts,
@@ -10,12 +11,14 @@ const router = Router();
 
 // routes
 
+router.get("/products/:id", getProduct);
+
 router.get("/products", getProducts);
 
 router.post("/products", createProducts);
 
-router.put("/products", updateProducts);
+router.put("/products/:id", updateProducts);
 
-router.delete("/products", deleteProducts);
+router.delete("/products/:id", deleteProducts);
 
 export default router;
