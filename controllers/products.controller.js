@@ -1,4 +1,6 @@
 import Product from "../models/product.model.js";
+import { uploadImage, deleteImage } from "../utils/cloudinary.js";
+import fs from "fs-extra";
 
 export const getProduct = async (req, res) => {
   try {
@@ -42,6 +44,18 @@ export const createProducts = async (req, res) => {
       price,
     });
 
+    // archivo a cloudinary - si existe req.files
+    if (req.files?.image) {
+      const result = await uploadImage(req.files.image.tempFilePath);
+      product.image = {
+        public_id: result.public_id,
+        secure_url: result.secure_url,
+      };
+
+      // eliminar archivos temporales locales (imagenes)
+      await fs.unlink(req.files.image.tempFilePath);
+    }
+
     await product.save();
 
     res.json(product);
@@ -82,6 +96,11 @@ export const deleteProducts = async (req, res) => {
       return res.status(404).json({
         message: `Product ${id} does not exists`,
       });
+
+    // si image tiene un public
+    if (product.image?.public_id) {
+      await deleteImage(product.image.public_id);
+    }
 
     res.json(product);
   } catch (error) {
