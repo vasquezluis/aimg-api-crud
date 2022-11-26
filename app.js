@@ -9,7 +9,7 @@ import productsRouter from "./routes/products.routes.js";
 const app = express();
 app.use(cors());
 app.use(morgan("dev"));
-app.use(express.json())
+app.use(express.json());
 
 // routes
 app.use(indexRoutes);
