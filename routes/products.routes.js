@@ -1,4 +1,5 @@
 import { Router } from "express";
+import fileUpload from "express-fileupload";
 import {
   getProduct,
   getProducts,
@@ -15,7 +16,14 @@ router.get("/products/:id", getProduct);
 
 router.get("/products", getProducts);
 
-router.post("/products", createProducts);
+router.post(
+  "/products",
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/uploads/",
+  }),
+  createProducts
+);
 
 router.put("/products/:id", updateProducts);
 
